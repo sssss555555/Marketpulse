@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MarketPulse — Know the Edge Before You Trade</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080809;
+  --bg2: #0f0f11;
+  --bg3: #161618;
+  --ink: #eeecea;
+  --ink2: #8a8880;
+  --ink3: #4a4a4e;
+  --gold: #c9a84c;
+  --gold2: #f0cc6e;
+  --bull: #4ade80;
+  --bear: #f87171;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.13);
+  --serif: 'Playfair Display', Georgia, serif;
+  --sans: 'DM Sans', sans-serif;
+  --mono: 'DM Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-weight: 300;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── TICKER TAPE ── */
+.ticker {
+  background: var(--gold);
+  color: #080809;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  padding: 7px 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.ticker-inner {
+  display: inline-flex;
+  gap: 0;
+  animation: ticker 28s linear infinite;
+}
+.ticker-item { padding: 0 32px; }
+.ticker-item .up::before { content: '▲ '; }
+.ticker-item .dn::before { content: '▼ '; }
+.ticker-item .up { color: #1a4a1a; }
+.ticker-item .dn { color: #5a1010; }
+
+@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* ── NAV ── */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 60px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(8,8,9,0.92);
+  backdrop-filter: blur(12px);
+}
+
+.nav-logo {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: var(--ink);
+  text-decoration: none;
+}
+.nav-logo span { color: var(--gold); }
+
+.nav-links { display: flex; align-items: center; gap: 32px; }
+.nav-links a { font-size: 13px; color: var(--ink2); text-decoration: none; transition: color 0.2s; letter-spacing: 0.2px; }
+.nav-links a:hover { color: var(--ink); }
+
+.nav-cta {
+  background: var(--gold);
+  color: #080809;
+  border: none;
+  border-radius: 6px;
+  padding: 9px 22px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.1s;
+  letter-spacing: 0.2px;
+}
+.nav-cta:hover { background: var(--gold2); }
+.nav-cta:active { transform: scale(0.97); }
+
+/* ── HERO ── */
+.hero {
+  min-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 60px 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -120px;
+  right: -80px;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--gold);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hero-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 24px;
+  height: 1px;
+  background: var(--gold);
+}
+
+.hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(48px, 7vw, 88px);
+  font-weight: 900;
+  line-height: 1.0;
+  letter-spacing: -2px;
+  max-width: 800px;
+  margin-bottom: 32px;
+}
+
+.hero h1 em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.hero-sub {
+  font-size: 17px;
+  color: var(--ink2);
+  max-width: 460px;
+  line-height: 1.7;
+  margin-bottom: 48px;
+  font-weight: 300;
+}
+
+.hero-actions { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+
+.btn-primary {
+  background: var(--gold);
+  color: #080809;
+  border: none;
+  border-radius: 8px;
+  padding: 15px 36px;
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.2s, transform 0.1s;
+  letter-spacing: 0.2px;
+}
+.btn-primary:hover { background: var(--gold2); }
+.btn-primary:active { transform: scale(0.97); }
+
+.btn-ghost {
+  color: var(--ink2);
+  font-size: 14px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s;
+}
+.btn-ghost:hover { color: var(--ink); }
+.btn-ghost::after { content: '→'; transition: transform 0.2s; }
+.btn-ghost:hover::after { transform: translateX(4px); }
+
+.hero-proof {
+  margin-top: 64px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding-top: 40px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.proof-item { display: flex; flex-direction: column; gap: 2px; }
+.proof-num {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: -0.5px;
+}
+.proof-label { font-size: 12px; color: var(--ink3); font-family: var(--mono); letter-spacing: 0.5px; }
+.proof-div { width: 1px; height: 40px; background: var(--border2); }
+
+/* ── LIVE PREVIEW ── */
+.preview-section {
+  padding: 80px 60px;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink3);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 48px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); max-width: 120px; }
+
+.preview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  max-width: 860px;
+}
+
+.preview-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  transition: border-color 0.2s;
+}
+.preview-card:hover { border-color: var(--border2); }
+.preview-card.wide { grid-column: span 2; }
+
+.card-label { font-family: var(--mono); font-size: 10px; color: var(--ink3); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+
+.bias-display {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.bias-num { font-family: var(--serif); font-size: 56px; font-weight: 700; color: var(--bull); line-height: 1; }
+.bias-tag { font-size: 12px; font-weight: 500; color: var(--bull); background: rgba(74,222,128,0.1); padding: 3px 10px; border-radius: 4px; }
+.bias-sub { font-size: 12px; color: var(--ink3); }
+
+.meter { height: 4px; background: var(--bg); border-radius: 2px; margin: 14px 0; overflow: hidden; }
+.meter-fill { height: 100%; border-radius: 2px; background: var(--bull); width: 72%; }
+
+.sector-list { display: flex; flex-direction: column; gap: 10px; }
+.sector-row { display: flex; align-items: center; justify-content: space-between; }
+.sector-name { font-size: 13px; color: var(--ink2); }
+.sector-sig { font-size: 12px; font-family: var(--mono); }
+.sector-sig.bull { color: var(--bull); }
+.sector-sig.bear { color: var(--bear); }
+.sector-sig.neu { color: var(--ink3); }
+
+.headline-list { display: flex; flex-direction: column; gap: 10px; }
+.headline-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.headline-row:last-child { border-bottom: none; padding-bottom: 0; }
+.hl-dot { width: 7px; height: 7px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+.hl-text { font-size: 13px; line-height: 1.45; color: var(--ink2); }
+
+/* ── HOW IT WORKS ── */
+.how-section { padding: 80px 60px; }
+
+.how-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  margin-top: 40px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.how-step {
+  padding: 36px 32px;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  transition: background 0.2s;
+}
+.how-step:last-child { border-right: none; }
+.how-step:hover { background: var(--bg3); }
+
+.step-num {
+  font-family: var(--serif);
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--border2);
+  line-height: 1;
+  margin-bottom: 16px;
+}
+
+.step-title { font-size: 16px; font-weight: 500; margin-bottom: 10px; color: var(--ink); }
+.step-body { font-size: 14px; color: var(--ink2); line-height: 1.65; }
+
+/* ── PRICING ── */
+.pricing-section { padding: 80px 60px; background: var(--bg2); border-top: 1px solid var(--border); }
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 40px;
+  max-width: 860px;
+}
+
+.pricing-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.pricing-card:hover { transform: translateY(-3px); }
+.pricing-card.featured {
+  border-color: var(--gold);
+  background: linear-gradient(160deg, rgba(201,168,76,0.06) 0%, var(--bg3) 60%);
+}
+
+.plan-label { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink3); }
+.plan-label.gold { color: var(--gold); }
+
+.plan-price {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+.plan-price .currency { font-size: 18px; color: var(--ink2); margin-top: 6px; align-self: flex-start; }
+.plan-price .amount { font-family: var(--serif); font-size: 46px; font-weight: 700; line-height: 1; letter-spacing: -1px; }
+.plan-price .period { font-size: 13px; color: var(--ink3); }
+
+.plan-desc { font-size: 13px; color: var(--ink2); line-height: 1.6; }
+
+.plan-features { display: flex; flex-direction: column; gap: 9px; }
+.plan-feature { display: flex; align-items: center; gap: 9px; font-size: 13px; color: var(--ink2); }
+.plan-feature::before { content: '—'; color: var(--ink3); font-family: var(--mono); flex-shrink: 0; }
+.plan-feature.active::before { content: '✓'; color: var(--gold); }
+
+.plan-btn {
+  margin-top: auto;
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--ink);
+  border-radius: 7px;
+  padding: 11px 0;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.2s, border-color 0.2s;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+}
+.plan-btn:hover { background: var(--bg2); border-color: var(--border2); }
+.plan-btn.gold-btn { background: var(--gold); color: #080809; border-color: var(--gold); }
+.plan-btn.gold-btn:hover { background: var(--gold2); border-color: var(--gold2); }
+
+/* ── TESTIMONIALS ── */
+.social-section { padding: 80px 60px; }
+
+.quote-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 40px; max-width: 860px; }
+
+.quote-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px;
+}
+
+.quote-text {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--ink);
+  margin-bottom: 18px;
+}
+
+.quote-author { display: flex; align-items: center; gap: 10px; }
+.quote-avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gold);
+}
+.quote-name { font-size: 13px; font-weight: 500; }
+.quote-role { font-size: 12px; color: var(--ink3); }
+
+/* ── CTA BAND ── */
+.cta-band {
+  padding: 100px 60px;
+  text-align: center;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.cta-band::before {
+  content: '';
+  position: absolute;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.cta-band h2 {
+  font-family: var(--serif);
+  font-size: clamp(36px, 5vw, 62px);
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  line-height: 1.05;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.cta-band h2 em { font-style: italic; color: var(--gold); }
+
+.cta-band p { font-size: 16px; color: var(--ink2); margin-bottom: 40px; position: relative; }
+
+.cta-band .btn-primary { position: relative; font-size: 16px; padding: 16px 44px; }
+
+.cta-fine { font-size: 12px; color: var(--ink3); margin-top: 16px; font-family: var(--mono); }
+
+/* ── FOOTER ── */
+footer {
+  padding: 40px 60px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.footer-logo { font-family: var(--serif); font-size: 16px; font-weight: 700; color: var(--ink2); }
+.footer-logo span { color: var(--gold); }
+.footer-copy { font-size: 12px; color: var(--ink3); font-family: var(--mono); }
+.footer-links { display: flex; gap: 24px; }
+.footer-links a { font-size: 12px; color: var(--ink3); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(--ink2); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp 0.7s ease both; }
+.fade-up-1 { animation-delay: 0.1s; }
+.fade-up-2 { animation-delay: 0.22s; }
+.fade-up-3 { animation-delay: 0.36s; }
+.fade-up-4 { animation-delay: 0.52s; }
+.fade-up-5 { animation-delay: 0.68s; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  .hero { padding: 60px 24px 48px; }
+  .preview-section, .how-section, .pricing-section, .social-section, .cta-band { padding: 60px 24px; }
+  footer { padding: 32px 24px; }
+  .preview-grid, .how-grid, .pricing-grid, .quote-grid { grid-template-columns: 1fr; }
+  .preview-card.wide { grid-column: 1; }
+  .hero-proof { gap: 20px; }
+  .proof-div { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item">SPY <span class="up">+0.72%</span></span>
+    <span class="ticker-item">QQQ <span class="up">+1.14%</span></span>
+    <span class="ticker-item">AAPL <span class="up">+0.38%</span></span>
+    <span class="ticker-item">NVDA <span class="up">+2.91%</span></span>
+    <span class="ticker-item">TSLA <span class="dn">−1.22%</span></span>
+    <span class="ticker-item">MSFT <span class="up">+0.55%</span></span>
+    <span class="ticker-item">META <span class="up">+1.67%</span></span>
+    <span class="ticker-item">AMZN <span class="dn">−0.31%</span></span>
+    <span class="ticker-item">BTC <span class="up">+3.44%</span></span>
+    <span class="ticker-item">Gold <span class="up">+0.19%</span></span>
+    <span class="ticker-item">SPY <span class="up">+0.72%</span></span>
+    <span class="ticker-item">QQQ <span class="up">+1.14%</span></span>
+    <span class="ticker-item">AAPL <span class="up">+0.38%</span></span>
+    <span class="ticker-item">NVDA <span class="up">+2.91%</span></span>
+    <span class="ticker-item">TSLA <span class="dn">−1.22%</span></span>
+    <span class="ticker-item">MSFT <span class="up">+0.55%</span></span>
+    <span class="ticker-item">META <span class="up">+1.67%</span></span>
+    <span class="ticker-item">AMZN <span class="dn">−0.31%</span></span>
+    <span class="ticker-item">BTC <span class="up">+3.44%</span></span>
+    <span class="ticker-item">Gold <span class="up">+0.19%</span></span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">Market<span>Pulse</span></a>
+  <div class="nav-links">
+    <a href="#how">How it works</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#pricing" class="nav-cta">Get early access</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow fade-up fade-up-1">AI-powered market intelligence</div>
+  <h1 class="fade-up fade-up-2">Know the <em>edge</em><br>before you trade.</h1>
+  <p class="hero-sub fade-up fade-up-3">MarketPulse scans today's financial news with AI and gives you a daily market bias — bullish, bearish, or neutral — before the opening bell.</p>
+  <div class="hero-actions fade-up fade-up-4">
+    <a href="#pricing" class="btn-primary">Start for free</a>
+    <a href="#how" class="btn-ghost">See how it works</a>
+  </div>
+  <div class="hero-proof fade-up fade-up-5">
+    <div class="proof-item">
+      <span class="proof-num">8AM</span>
+      <span class="proof-label">Daily scan</span>
+    </div>
+    <div class="proof-div"></div>
+    <div class="proof-item">
+      <span class="proof-num">6</span>
+      <span class="proof-label">Sectors covered</span>
+    </div>
+    <div class="proof-div"></div>
+    <div class="proof-item">
+      <span class="proof-num">&lt;60s</span>
+      <span class="proof-label">To your inbox</span>
+    </div>
+    <div class="proof-div"></div>
+    <div class="proof-item">
+      <span class="proof-num">€9</span>
+      <span class="proof-label">Per month</span>
+    </div>
+  </div>
+</section>
+
+<!-- PREVIEW -->
+<section class="preview-section">
+  <div class="section-label">Live example</div>
+  <div class="preview-grid">
+    <div class="preview-card">
+      <div class="card-label">Today's bias</div>
+      <div class="bias-display">
+        <div class="bias-num">72</div>
+        <div class="bias-tag">Bullish</div>
+      </div>
+      <div class="meter"><div class="meter-fill"></div></div>
+      <div class="bias-sub">Based on 14 headlines scanned this morning</div>
+    </div>
+    <div class="preview-card">
+      <div class="card-label">Sector signals</div>
+      <div class="sector-list">
+        <div class="sector-row"><span class="sector-name">Technology</span><span class="sector-sig bull">Bullish ↑</span></div>
+        <div class="sector-row"><span class="sector-name">Energy</span><span class="sector-sig neu">Neutral —</span></div>
+        <div class="sector-row"><span class="sector-name">Financials</span><span class="sector-sig bull">Bullish ↑</span></div>
+        <div class="sector-row"><span class="sector-name">Healthcare</span><span class="sector-sig bear">Bearish ↓</span></div>
+        <div class="sector-row"><span class="sector-name">Consumer</span><span class="sector-sig neu">Neutral —</span></div>
+      </div>
+    </div>
+    <div class="preview-card wide">
+      <div class="card-label">Key headlines driving today's bias</div>
+      <div class="headline-list">
+        <div class="headline-row">
+          <div class="hl-dot" style="background:#4ade80"></div>
+          <div class="hl-text">Fed signals potential rate cuts in Q3 as inflation data comes in cooler than expected</div>
+        </div>
+        <div class="headline-row">
+          <div class="hl-dot" style="background:#4ade80"></div>
+          <div class="hl-text">Nvidia beats earnings estimates by 18%, raises forward guidance on AI chip demand</div>
+        </div>
+        <div class="headline-row">
+          <div class="hl-dot" style="background:#f87171"></div>
+          <div class="hl-text">Healthcare sector faces headwinds as Congress pushes new drug pricing legislation</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <div class="section-label">How it works</div>
+  <div class="how-grid">
+    <div class="how-step">
+      <div class="step-num">01</div>
+      <div class="step-title">AI scans the news</div>
+      <div class="step-body">Every morning at 8AM, MarketPulse pulls today's top financial headlines from across the web — earnings, macro events, geopolitics, Fed signals.</div>
+    </div>
+    <div class="how-step">
+      <div class="step-num">02</div>
+      <div class="step-title">Sentiment is scored</div>
+      <div class="step-body">Each headline is analyzed for market impact. Bullish signals push the score up. Bearish signals push it down. You get a single number: 0–100.</div>
+    </div>
+    <div class="how-step">
+      <div class="step-num">03</div>
+      <div class="step-title">You trade with context</div>
+      <div class="step-body">A daily bias score, sector breakdown, and key driver headlines land in your inbox before markets open. No more starting the day blind.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="section-label">Pricing</div>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="plan-label">Free</div>
+      <div class="plan-price">
+        <span class="currency">€</span>
+        <span class="amount">0</span>
+        <span class="period">/mo</span>
+      </div>
+      <div class="plan-desc">Get a feel for the product. One scan per day, delayed by 2 hours.</div>
+      <div class="plan-features">
+        <div class="plan-feature active">1 scan per day</div>
+        <div class="plan-feature active">Overall bias score</div>
+        <div class="plan-feature">Sector breakdown</div>
+        <div class="plan-feature">Email alerts</div>
+        <div class="plan-feature">Pre-market delivery</div>
+      </div>
+      <a href="#" class="plan-btn">Get started free</a>
+    </div>
+    <div class="pricing-card featured">
+      <div class="plan-label gold">Pro — Most popular</div>
+      <div class="plan-price">
+        <span class="currency">€</span>
+        <span class="amount">9</span>
+        <span class="period">/mo</span>
+      </div>
+      <div class="plan-desc">Everything you need to start every trading day with an edge.</div>
+      <div class="plan-features">
+        <div class="plan-feature active">Unlimited scans</div>
+        <div class="plan-feature active">Full sector breakdown</div>
+        <div class="plan-feature active">Email alerts at 8AM</div>
+        <div class="plan-feature active">Pre-market delivery</div>
+        <div class="plan-feature">API access</div>
+      </div>
+      <a href="#" class="plan-btn gold-btn">Get early access →</a>
+    </div>
+    <div class="pricing-card">
+      <div class="plan-label">Trader</div>
+      <div class="plan-price">
+        <span class="currency">€</span>
+        <span class="amount">29</span>
+        <span class="period">/mo</span>
+      </div>
+      <div class="plan-desc">For active traders who want to build on top of MarketPulse data.</div>
+      <div class="plan-features">
+        <div class="plan-feature active">Everything in Pro</div>
+        <div class="plan-feature active">API access</div>
+        <div class="plan-feature active">Ticker-level bias</div>
+        <div class="plan-feature active">Watchlist alerts</div>
+        <div class="plan-feature active">Historical data</div>
+      </div>
+      <a href="#" class="plan-btn">Join waitlist</a>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<section class="social-section">
+  <div class="section-label">Early feedback</div>
+  <div class="quote-grid">
+    <div class="quote-card">
+      <div class="quote-text">"I used to spend 30 minutes reading news before I even opened my brokerage. Now I get a number and I know where to focus."</div>
+      <div class="quote-author">
+        <div class="quote-avatar">JV</div>
+        <div>
+          <div class="quote-name">Joris van den Berg</div>
+          <div class="quote-role">Retail trader, Amsterdam</div>
+        </div>
+      </div>
+    </div>
+    <div class="quote-card">
+      <div class="quote-text">"The sector breakdown is what I didn't know I needed. On bearish healthcare days I rotate — it's become part of my routine."</div>
+      <div class="quote-author">
+        <div class="quote-avatar">SK</div>
+        <div>
+          <div class="quote-name">Sarah K.</div>
+          <div class="quote-role">Options trader, Rotterdam</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<section class="cta-band">
+  <h2>Stop trading<br><em>without context.</em></h2>
+  <p>Join traders who start every morning with a market edge. Free to try, cancel anytime.</p>
+  <a href="#pricing" class="btn-primary">Get early access — it's free</a>
+  <div class="cta-fine">No credit card required · Cancel anytime · Built with AI</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Market<span>Pulse</span></div>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="#">Contact</a>
+  </div>
+  <div class="footer-copy">© 2026 MarketPulse. Not financial advice.</div>
+</footer>
+
+</body>
+</html>
